@@ -13,6 +13,6 @@ def get_root():
                 'root': node['hash']
             }
 
-@app.route("proof/<tokenId>/<amount>/")
+@app.route("/proof/<tokenId>/<amount>/")
 def get_proof(tokenId, amount):
     return tree.get_proof({'tokenId': tokenId, 'amount': int(amount)})
