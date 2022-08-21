@@ -3,14 +3,12 @@ from Crypto.Hash import keccak
 
 
 class MerkleTree:
-    def __init__(self, data=[]) -> None:
+    def __init__(self, data = []) -> None:
         self.data = data
         self.tree = {}
-        self.root = None
 
     def load_from_file(self, path):
         self.tree = json.loads(open(path).read())
-        self.update_root()
         return self
 
     def get_proof(self, el):
@@ -28,11 +26,6 @@ class MerkleTree:
             node = self.tree[node["parent"]]
 
         return proof
-
-    def update_root(self):
-        for _, node in self.tree.items():
-            if node["parent"] is None:
-                self.root = node["hash"]
 
     def get_hash(self, el):
         k = keccak.new(digest_bits=256)
@@ -84,5 +77,3 @@ class MerkleTree:
                 l["sister"], r["sister"] = r["hash"], l["hash"]
                 tmp_keys.append(lr_hash)
             keys = tmp_keys
-
-        self.update_root()
