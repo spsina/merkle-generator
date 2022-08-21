@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route("/<tokenId>/<amount>/")
 def get_proof(tokenId, amount):
-    return tree.get_proof({"tokenId": tokenId, "amount": int(amount)})
+    return {"proof": tree.get_proof({"tokenId": tokenId, "amount": int(amount)})}
 
 
 @app.route("/root")
