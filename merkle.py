@@ -3,7 +3,7 @@ from Crypto.Hash import keccak
 
 
 class MerkleTree:
-    def __init__(self, data = []) -> None:
+    def __init__(self, data=[]) -> None:
         self.data = data
         self.tree = {}
 

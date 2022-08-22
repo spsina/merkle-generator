@@ -1,9 +1,11 @@
 from flask import Flask
-from merkle import MerkleTree
 
-tree = MerkleTree().load_from_file("tree.txt")
+from generate_tree import generate_tree
+
+tree, data = generate_tree()
 
 app = Flask(__name__)
+
 
 @app.route("/root/")
 def get_root():
@@ -13,6 +15,11 @@ def get_root():
                 'root': node['hash']
             }
 
-@app.route("/proof/<tokenId>/<amount>/")
-def get_proof(tokenId, amount):
-    return tree.get_proof({'tokenId': tokenId, 'amount': int(amount)})
+
+@app.route("/proof/<tokenId>/")
+def get_proof(tokenId):
+    amount = int(data[tokenId])
+    return {
+        'proof': tree.get_proof({'tokenId': tokenId, 'amount': amount}),
+        'amount': amount
+    }

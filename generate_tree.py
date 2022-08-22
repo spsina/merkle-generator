@@ -2,15 +2,19 @@ import json
 
 from merkle import MerkleTree
 
-data = json.loads(open("data.json").read())
-array_data = []
 
-for key, amount in data.items():
-    array_data.append({"tokenId": key, "amount": int(amount)})
+def generate_tree():
+    data = json.loads(open("data.json").read())
+    array_data = []
 
-tree = MerkleTree(array_data)
-tree.generate_tree()
+    for key, amount in data.items():
+        array_data.append({"tokenId": key, "amount": int(amount)})
 
-result = open("tree.txt", "w")
-result.write(json.dumps(tree.tree))
-result.close()
+    tree = MerkleTree(array_data)
+    tree.generate_tree()
+
+    return tree, data
+
+
+if __name__ == '__main__':
+    generate_tree()
