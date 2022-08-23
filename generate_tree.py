@@ -12,7 +12,6 @@ def generate_tree():
 
     tree = MerkleTree(array_data)
     tree.generate_tree()
-
     return tree, data
 
 

@@ -46,10 +46,16 @@ class MerkleTree:
             el = el.encode()
         
         k.update(el)
-        return str(k.hexdigest())
+        return k.digest()
 
     def get_parent_hash(self, l, r):
-        return self.get_hash("".join(list(sorted([l, r]))))
+
+        if r <= l:
+            packed = encode(['bytes32', 'bytes32'], [r, l])
+        else:
+            packed = encode(['bytes32', 'bytes32'], [l, r])
+
+        return self.get_hash(packed)
 
     def verify(self, el, proof):
         el_hash = self.get_hash(self.get_packed(el['tokenId'], el['amount']))

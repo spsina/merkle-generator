@@ -1,3 +1,4 @@
+import binascii
 from flask import Flask
 
 from generate_tree import generate_tree
@@ -12,14 +13,15 @@ def get_root():
     for _, node in tree.tree.items():
         if node['parent'] is None:
             return {
-                'root': node['hash']
+                'root': binascii.hexlify(node['hash']).decode()
             }
 
 
 @app.route("/proof/<tokenId>/")
 def get_proof(tokenId):
     amount = int(data[tokenId])
-    proof =  tree.get_proof({'tokenId': tokenId, 'amount': amount})
+    proof =  ["0x" + binascii.hexlify(p).decode() for p in tree.get_proof({'tokenId': tokenId, 'amount': amount})]
+    # print(tree.verify({'tokenId': tokenId, 'amount': amount}, proof))
     return {
         'proof': proof,
         'amount': amount,
