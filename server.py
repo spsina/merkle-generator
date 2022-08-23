@@ -18,11 +18,14 @@ def get_root():
             }
 
 
-@app.route("/proof/<tokenId>/")
-def get_proof(tokenId):
-    amount = int(data[tokenId])
-    proof = ["0x" + binascii.hexlify(p).decode() for p in tree.get_proof({'tokenId': tokenId, 'amount': amount})]
-    return {
-        'proof': proof,
-        'amount': amount,
-    }
+@app.route("/proof/<tokenIds>/")
+def get_proof(tokenIds):
+    result = {}
+    for tokenId in tokenIds.spilit(','):
+        amount = int(data[tokenId])
+        proof = ["0x" + binascii.hexlify(p).decode() for p in tree.get_proof({'tokenId': tokenId, 'amount': amount})]
+        result[tokenId] = {
+            'proof': proof,
+            'amount': amount,
+        }
+    return result
