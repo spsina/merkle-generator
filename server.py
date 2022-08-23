@@ -21,7 +21,7 @@ def get_root():
 @app.route("/proof/<tokenIds>/")
 def get_proof(tokenIds):
     result = {}
-    for tokenId in tokenIds.spilit(','):
+    for tokenId in tokenIds.split(','):
         amount = int(data[tokenId])
         proof = ["0x" + binascii.hexlify(p).decode() for p in tree.get_proof({'tokenId': tokenId, 'amount': amount})]
         result[tokenId] = {
