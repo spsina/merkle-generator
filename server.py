@@ -19,7 +19,8 @@ def get_root():
 @app.route("/proof/<tokenId>/")
 def get_proof(tokenId):
     amount = int(data[tokenId])
+    proof =  tree.get_proof({'tokenId': tokenId, 'amount': amount})
     return {
-        'proof': tree.get_proof({'tokenId': tokenId, 'amount': amount}),
-        'amount': amount
+        'proof': proof,
+        'amount': amount,
     }
