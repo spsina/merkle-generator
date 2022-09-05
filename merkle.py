@@ -1,12 +1,11 @@
-
-import binascii
 import json
 from Crypto.Hash import keccak
 from eth_abi import encode
 
 
 class MerkleTree:
-    def __init__(self, data = []) -> None:
+    def __init__(self, get_packed, data=[]) -> None:
+        self.get_packed = get_packed
         self.data = data
         self.tree = {}
 
@@ -23,7 +22,7 @@ class MerkleTree:
 
     def get_proof(self, el):
         proof = []
-        el_hash = self.get_hash(self.get_packed(el['tokenId'], el['amount']))
+        el_hash = self.get_hash(self.get_packed(el))
 
         if el_hash not in self.tree.keys():
             return proof
@@ -36,15 +35,11 @@ class MerkleTree:
 
         return proof
 
-    def get_packed(self, tokenId, amount):
-        return encode(['uint256', 'uint256'], [int(tokenId), int(amount)])
-
-
     def get_hash(self, el):
         k = keccak.new(digest_bits=256)
         if type(el) == str:
             el = el.encode()
-        
+
         k.update(el)
         return k.digest()
 
@@ -58,7 +53,7 @@ class MerkleTree:
         return self.get_hash(packed)
 
     def verify(self, el, proof):
-        el_hash = self.get_hash(self.get_packed(el['tokenId'], el['amount']))
+        el_hash = self.get_hash(self.get_packed(el))
         _hash = el_hash
 
         for _proof in proof:
@@ -68,7 +63,7 @@ class MerkleTree:
 
     def generate_tree(self):
         for el in self.data:
-            el_hash = self.get_hash(self.get_packed(el['tokenId'], el['amount']))
+            el_hash = self.get_hash(self.get_packed(el))
             self.tree[el_hash] = {
                 "hash": el_hash,
                 "content": el,
