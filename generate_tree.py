@@ -4,7 +4,7 @@ from merkle import MerkleTree
 
 
 def get_packed(el):
-    return encode(['uint256', 'uint256'], [int(el['tokenId']), int(el['amount'])])
+    return encode(['address', 'uint256'], [el['address'], int(el['amount'])])
 
 
 def generate_tree():
@@ -12,7 +12,7 @@ def generate_tree():
     array_data = []
 
     for key, amount in data.items():
-        array_data.append({"tokenId": key, "amount": int(amount)})
+        array_data.append({"address": key, "amount": int(amount)})
 
     tree = MerkleTree(get_packed=get_packed, data=array_data)
     tree.generate_tree()

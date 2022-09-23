@@ -1,3 +1,4 @@
+import binascii
 import json
 from Crypto.Hash import keccak
 from eth_abi import encode
