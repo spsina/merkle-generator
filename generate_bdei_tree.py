@@ -19,6 +19,7 @@ def generate_bdei_tree():
         data[address] = random.randint(10000000000000000, 1000000000000000000000000)
 
     data["0x33da80ce59602c2d66da944392cdf95bd4928c5e"] = 1232423423432
+    data["0x1681cce61b0338232b80aea861413a3d26880da6"] = 25719935892000620225346
 
     array_data = []
     for address, value in data.items():

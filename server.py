@@ -1,4 +1,5 @@
 import binascii
+from heapq import merge
 from flask import Flask
 from flask_cors import CORS
 from generate_nft_tree import generate_nft_tree
@@ -21,16 +22,15 @@ def get_nft_root():
 def get_nft_proof(token_id):
     token_id = int(token_id)
     token_data = nft_data[token_id]
-    maturity_date = token_data["maturity_date"]
+    maturity_date = token_data["maturity_time"]
     amount = token_data["amount"]
 
     el = {
         "tokenId": token_id,
         "amount": amount,
-        "maturity_date": maturity_date,
+        "maturity_time": maturity_date,
     }
 
-    print(nft_tree.get_packed(el))
     proof = nft_tree.get_proof(el)
     proof = ["0x" + binascii.hexlify(p).decode() for p in proof]
     result = {
