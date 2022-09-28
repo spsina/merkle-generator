@@ -3,10 +3,10 @@ from multiprocessing.sharedctypes import Value
 from flask import Flask
 from flask_cors import CORS
 
-from generate_bdei_tree import generate_bdei_tree
+from generate_max_active_liquidity_tree import generate_tree
 
 # dei_tree, dei_data = generate_dei_tree()
-tree, data = generate_bdei_tree()
+tree, data = generate_tree()
 
 app = Flask(__name__)
 CORS(app)
