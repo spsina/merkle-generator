@@ -1,23 +1,16 @@
 import json
 from helpers import get_web3_object
 from multicall import Multicall, Call
-
+import csv
 
 w3 = get_web3_object()
 
 
-def load_nft_ids():
-    nft_ids = []
-    with open("nft_ids.txt", "r") as f:
-        for line in f:
-            nft_ids.append(int(line.strip()))
-    return nft_ids
-
-
-def load_nft_amounts():
-    file = open("nft_amount.json", "r")
-    nft_amounts = json.load(file)
-    return nft_amounts
+def load_csv_file(file_path):
+    with open(file_path, "r") as f:
+        reader = csv.reader(f)
+        data = list(reader)
+    return data[1:]
 
 
 def multi_fetch_maturity_time():
@@ -26,10 +19,16 @@ def multi_fetch_maturity_time():
     base_maturity_time = 1664571397
     whitelist = [441, 442]  # these addresses get the base maturity time
 
-    nft_ids = load_nft_ids()
+    sheet_data = load_csv_file("nft_sheet_new.csv")
+
+    # nft_amount is the 3rd column in the sheet
+    nft_amounts = {}
+    for row in sheet_data:
+        nft_amounts[row[1]] = int(float(row[2]) * 1e18)
 
     calls = []
-    for nft_id in nft_ids:
+    for row in sheet_data:
+        nft_id = int(row[1])
         calls.append(
             Call(
                 w3,
@@ -42,7 +41,6 @@ def multi_fetch_maturity_time():
     multicall = Multicall(w3, calls)
     result = multicall()
 
-    nft_amount = load_nft_amounts()
     nft_data = []  #  {tokenId, amount, maturity_time}
 
     # the second argument is the maturity time
@@ -53,7 +51,7 @@ def multi_fetch_maturity_time():
         nft_data.append(
             {
                 "tokenId": nft_id,
-                "amount": nft_amount[str(nft_id)],
+                "amount": nft_amounts[str(nft_id)],
                 "maturity_time": maturity_time,
             }
         )
